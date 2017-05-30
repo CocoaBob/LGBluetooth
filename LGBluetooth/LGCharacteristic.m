@@ -77,6 +77,14 @@
     return [self.cbCharacteristic.UUID representativeString];
 }
 
+- (CBService *)service {
+    id service = self.cbCharacteristic.service;
+    if ([service isKindOfClass:[CBService class]]) {
+        return service;
+    }
+    return nil;
+}
+
 /*----------------------------------------------------*/
 #pragma mark - Public Methods -
 /*----------------------------------------------------*/
@@ -99,7 +107,7 @@
     
     [self push:aCallback toArray:self.notifyOperationStack];
     
-    [self.cbCharacteristic.service.peripheral setNotifyValue:notifyValue
+    [[self service].peripheral setNotifyValue:notifyValue
                                            forCharacteristic:self.cbCharacteristic];
 }
 
@@ -112,7 +120,7 @@
     if (aCallback) {
         [self push:aCallback toArray:self.writeOperationStack];
     }
-    [self.cbCharacteristic.service.peripheral writeValue:data
+    [[self service].peripheral writeValue:data
                                        forCharacteristic:self.cbCharacteristic
                                                     type:type];
 }
@@ -130,7 +138,7 @@
         return;
     }
     [self push:aCallback toArray:self.readOperationStack];
-    [self.cbCharacteristic.service.peripheral readValueForCharacteristic:self.cbCharacteristic];
+    [[self service].peripheral readValueForCharacteristic:self.cbCharacteristic];
 }
 
 /*----------------------------------------------------*/
